@@ -1,0 +1,65 @@
+---
+title: "Lab2"
+author: "Zhipeng Chen"
+output:
+  html_document: default
+---
+
+
+## More on types
+```{r}
+a <- c(1L, "This is a character")
+b <- c(TRUE, "Hello World")
+c <- c(FALSE, 2) #what is wrong here
+```
+### Question 1 What type do the vectors hold?
+a: Character. Since the integer 1 has been coerced to the highest type which is character.
+
+b: Character. Since the logical object has been coerced to the highest type which is character.
+
+c: numeric. Since 0 is considered to be false. Also the logical object has been coerced to the highest type which is numeric.
+
+## Explicit coercion
+```{r}
+# using the same objects a, b, c from the above question
+a.logical <- as.logical(a)
+a.integer <- as.integer(a)
+a.numeric <- as.numeric(a)
+```
+```{r}
+b.logical <- as.logical(b)
+b.integer <- as.integer(b)
+b.numeric <- as.numeric(b)
+```
+```{r}
+c.logical <- as.logical(c)
+c.integer <- as.integer(c)
+c.numeric <- as.numeric(c)
+c.character <- as.character(c)
+
+d <- -5:5
+d.logical <- as.logical(d)
+```
+### Question 2 What do you get after the coercions? Does any one suprise you? Can you figure out why?
+The c.logical and d.logical suprise me. Since in R, the zero is false and non-zero is ture.
+
+## Try arithmetics
+```{r}
+v <- c(969,971:1023)
+```
+
+```{r}
+v.power.sum <- sum(2^v)
+```
+
+```{r}
+v.power.sum.53 <- sum(2^v[-1])
+```
+
+```{r}
+v.power.sum.second <- 2^v[1] + sum(2^v[-1])
+```
+### Question 3 Explain what you found
+If we do the sum directly, the result is infinity since the result is divergence after adding separately.
+
+
