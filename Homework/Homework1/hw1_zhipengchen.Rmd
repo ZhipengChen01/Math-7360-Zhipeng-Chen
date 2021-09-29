@@ -1,0 +1,184 @@
+---
+title: "Homework1"
+author: "Zhipeng Chen"
+date: "9/23/2021"
+output: html_document
+---
+
+## 1
+### a
+
+```{r}
+a <- 0.7
+b <- 0.2
+c <- 0.1
+```
+
+$0.7_{10}$=$0.10110011001_{2}$  
+$0.2_{10}$=$0.00110011001_{2}$  
+$0.1_{10}$=$0.00011001100_{2}$  
+
+### b, c, d
+```{r}
+(a + b) + c == 1
+a + (b + c) == 1
+(a + c) + b == 1
+```
+### e
+The question b is false and the other two are both true. This may be caused by the rounding error. The real number cannot be exactly represented by floating-point computation. For example, the decimal number 0.1 has a finite decimal representation, in binary it has an infinite repeating representation.
+
+## 2
+### a
+```{r}
+x <- 0.001 * (988:1012)
+y1 <- x^7 - 7*x^6 + 21*x^5 - 35*x^4 + 35*x^3 - 21*x^2 + 7*x - 1
+plot(x, y1)
+```
+### b
+```{r}
+y2 <- (x - 1)^7
+plot(x, y2)
+```
+### c
+The plot a is more precise than plot b. This may be caused by rounding error in floating-point computation.
+
+## 3
+### a
+```{r}
+u <- matrix(c(1, 2, 3, 3, 2, 1), 6, 1)
+ut <- t(u)
+d <- ut %*% u
+part2 <- (2/as.vector(d)) * (u %*% ut)
+U <- diag(6) - part2
+U
+```
+### b
+```{r}
+C <- U %*% U
+largest_off_diag <- max(C[lower.tri(C) | upper.tri(C)])
+largest_off_diag
+smallest_off_diag <- min(C[lower.tri(C) | upper.tri(C)])
+smallest_off_diag
+```
+### c
+```{r}
+largest_diag <- max(diag(C))
+largest_diag
+smallest_diag <- min(diag(C))
+smallest_diag
+```
+### d
+```{r}
+U %*% u
+```
+### e
+```{r}
+s <- max(rowSums(abs(U)))
+s
+```
+### f
+```{r}
+print(U[3,])
+```
+### g
+```{r}
+print(U[3,2])
+```
+### h
+```{r}
+A <- U[,1:3]
+P <- A %*% t(A)
+P
+```
+### i
+```{r}
+max(rowSums(abs(((P %*% P) - P))))
+library(matrixcalc)
+is.idempotent.matrix(P)
+```
+The result is not zero. P is not idempotent. However, when I use the package "matrixcalc" to verify my answer, the result shows that P is a idempotent matrix.  
+
+### j
+```{r}
+B <- U[,(ncol(U)-2):ncol(U)]
+Q <- B %*% t(B)
+Q
+```
+### k
+```{r}
+max(rowSums(abs(((Q %*% Q) - Q))))
+is.idempotent.matrix(Q)
+```
+The result is not zero. Q is not idempotent. However, when I use the package "matrixcalc" to verify my answer, the result shows that Q is a idempotent matrix.  
+
+### l
+```{r}
+P + Q
+```
+
+## 4
+```{r}
+oringp <- read.table("E:\\OneDrive\\Study\\PhD of Biostatistics\\4-Data Analysis\\HW1\\oringp.dat")
+oringp <- oringp[complete.cases(oringp),]
+cor(oringp$V4, oringp$V5)
+```
+
+## 5
+### a
+ - All R functions have three parts:
+
+    - the `formals()`, the list of **arguments** which controls how you can call the function
+ 
+    - the `body()`, the **code** inside the function
+    
+    - the `environment()`, the "map" of the location of the function's variables
+
+### b
+```{r}
+x <- 10
+f1 <- function(x){
+    function(){
+        x + 10
+    }
+}
+f1(1)()
+```
+### c
+```{r}
+mean(x = c(1:10, NA), na.rm = TRUE)
+```
+### d
+```{r}
+f2 <- function(a, b){
+  return(a * 10)
+}
+f2(10, stop("This is an error!"))
+```
+There is no error when called since we don't use b when call the function.
+
+## 6
+### a
+```{r}
+matrixA <- function(n){
+  stA <- matrix(0, nrow = n, ncol = n)
+  for (i in 1:n){
+    for (j in 1:n){
+      stA[i, j] = 1 / (abs(i - j) + 1)
+    }
+  }
+  stA
+}
+```
+
+### b
+```{r}
+matrixA(10)
+```
+### c
+```{r}
+chol(matrixA(10))
+```
+### d
+```{r}
+det(matrixA(10))
+```
