@@ -1,0 +1,132 @@
+---
+title: "Lab3"
+author: Zhipeng Chen
+date: 10/1/2021
+output: pdf_document
+---
+
+```{r}
+rm(list = ls())
+sessionInfo()
+```
+## Case study on numerical integration
+### 1
+```{r}
+midpoint <- function(f, a, b) {
+  result <- (b - a) * f((a + b)/2)
+  return(result)
+}
+
+trapezoid <- function(f, a, b) {
+  result <- ((b - a)/2) * (f(a) + f(b))
+  return(result)
+}
+
+midpoint(sin, 0, pi)
+trapezoid(sin, 0, pi)
+```
+
+### 2
+```{r}
+midpoint.composite <- function(f, a, b, n = 10) {
+  points <- seq(a, b, length = n + 1)
+
+  area <- 0
+  for (i in seq_len(n)) {
+    area <- area + midpoint(f, a, b)
+  }
+  return(area)
+}
+
+trapezoid.composite <- function(f, a, b, n = 10) {
+  points <- seq(a, b, length = n + 1)
+  
+  area <- 0
+  for (i in seq_len(n)) {
+    area <- area + trapezoid(f, a, b)
+  }
+  return(area)
+}
+
+midpoint.composite(sin, 0, pi, n = 10)
+
+midpoint.composite(sin, 0, pi, n = 100)
+
+midpoint.composite(sin, 0, pi, n = 1000)
+
+trapezoid.composite(sin, 0, pi, n = 10)
+
+trapezoid.composite(sin, 0, pi, n = 100)
+
+trapezoid.composite(sin, 0, pi, n = 1000)
+```
+There is a loop in the function so we will get different results per loop times.
+
+### 3
+```{r}
+midpoint.composite.vectorize <- function(f, a, b, n = 10) {
+  points <- seq(a, b, length = n + 1)
+  areas <- midpoint(f, points[rep(1,n)], points[rep((n+1),n)]) 
+  return(sum(areas))
+}
+
+trapezoid.composite.vectorize <- function(f, a, b, n = 10) {
+  points <- seq(a, b, length = n + 1)
+  areas <- trapezoid(f, points[rep(1,n)], points[rep((n+1),n)])
+  return(sum(areas))
+}
+
+midpoint.composite.vectorize(sin, 0, pi, n = 10)
+
+midpoint.composite.vectorize(sin, 0, pi, n = 100)
+
+midpoint.composite.vectorize(sin, 0, pi, n = 1000)
+
+trapezoid.composite.vectorize(sin, 0, pi, n = 10)
+
+trapezoid.composite.vectorize(sin, 0, pi, n = 100)
+
+trapezoid.composite.vectorize(sin, 0, pi, n = 1000)
+```
+The results are the same as above.
+
+### 4
+```{r}
+system.time(midpoint.composite(sin, 0, pi, n = 10000))
+system.time(trapezoid.composite(sin, 0, pi, n = 10000))
+system.time(midpoint.composite.vectorize(sin, 0, pi, n = 10000))
+system.time(trapezoid.composite.vectorize(sin, 0, pi, n = 10000))
+```
+
+## Normal Equations
+```{r}
+my.normal.equations <- function(X, Y) {
+  if (!is.vector(Y)) {
+    stop("Y is not a vector!")
+  }
+  
+  if (!is.matrix(X)) {  # force X to be a matrix for now
+    stop("X is not a matrix!")
+  }
+  
+  if (dim(X)[1] != length(Y)) {
+    stop("Dimension mismatch between X and Y!")
+  }
+  
+  return(solve(t(X) %*% X) %*% t(X) %*% Y) # finish the calculation for beta
+}
+
+set.seed(7360)
+sample.size <- 100
+num.col <- 2
+X <- matrix(rnorm(sample.size * num.col), nrow = sample.size, ncol = num.col)
+X <- cbind(1, X)
+Y <- rnorm(sample.size)
+
+system.time(result.lm <- lm(Y ~ X[, 2] + X[, 3]))
+summary(result.lm)
+
+system.time(result.my.normal.equations <- my.normal.equations(X, Y))
+result.my.normal.equations
+```
+The results are matching.
