@@ -1,0 +1,76 @@
+---
+title: "Lab4_ggplot2"
+author: "Zhipeng Chen"
+output: pdf_document
+---
+
+```{r}
+rm(list = ls()) # clean-up workspace
+library("tidyverse")
+```
+
+## Some exercise on ggplot2
+
+### Aesthetic mappings
+
+Q1. What's gone wrong with this code?
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy), colour = "blue")
+```
+The bracket should be placed after "y = hwy,".
+
+
+Q2. Which variables in `mpg` are categorical? Which variables are continuous?
+(Hint: type `?mpg` to read the documentation for the dataset).
+How can you see this information when you run `mpg`?
+```{r}
+summary(mpg)
+```
+
+Q3. Map a continuous variable to `color`, `size`, and `shape`.
+How do these aesthetics behave differently for categorical vs. continuous variables?
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, colour = cyl))
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, size = cyl))
+#ggplot(data = mpg) +
+#  geom_point(mapping = aes(x = displ, y = hwy, shape = cyl))
+```
+A continuous variable can not be mapped to shape.
+
+Q4. What happens if you map the same variable to multiple aesthetics?
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, colour = class, size = class, shape = class))
+```
+The class will be different by all of them.
+
+
+Q5. What happens if you map an aesthetic to something other than a variable name, like `aes(colour = displ < 5)`? Note, you’ll also need to specify `x` and `y`.
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, colour = cyl > 5))
+```
+There are different color shown up that differs from "True" or "False" by the condition.
+
+
+### Geometric objects
+
+Q6. What geom would you use to draw a line chart? A boxplot? A histogram? An area chart?  
+1. geom_smooth 2. geom_boxplot 3. geom_bar 3. geom_polygon
+
+Q7. Will these two graphs look different? Why/why not?
+
+```{r, eval=FALSE}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth()
+
+ggplot() + 
+  geom_point(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_smooth(data = mpg, mapping = aes(x = displ, y = hwy))
+```
+They are the same.
