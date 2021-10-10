@@ -1,0 +1,5 @@
+Q2c, explain in more detail about what operations cause the error
+
+Total: 9.5
+
+
